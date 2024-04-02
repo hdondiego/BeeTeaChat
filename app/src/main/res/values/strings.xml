@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BeeTeaChat</string>
+    <string name="send">Send</string>
+    <string name="turn_on_bluetooth">Turn on Bluetooth</string>
+    <string name="search_devices">Search Devices</string>
+    <string name="title_activity_device_list">DeviceListActivity</string>
+
+    <string name="paired_devices">Paired Devices</string>
+    <string name="available_devices">Available Devices</string>
+    <string name="scan_devices">Scan Devices</string>
+</resources>
