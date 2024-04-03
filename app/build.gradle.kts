@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "edu.niu.android.beeteachat"
-        minSdk = 23
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

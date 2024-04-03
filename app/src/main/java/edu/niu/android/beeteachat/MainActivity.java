@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     // Must have for the Bluetooth functionality
     private BluetoothAdapter bluetoothAdapter; // For features like turning on/off Bluetooth and getting a list of paired devices
     private final int LOCATION_PERMISSION_REQUEST = 101;
+    private final int BLUETOOTH_SCAN_PERMISSION_REQUEST = 102;
     //private Set<BluetoothDevice> pairedDevices;
     //private BluetoothViewModel bluetoothViewModel;
 
@@ -95,7 +97,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBluetooth() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        //bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
+        String bluetoothManagerFormat = String.format("bluetoothManager == null: %b", bluetoothManager == null);
+        Log.d(MainActivity.class.getSimpleName(), bluetoothManagerFormat);
+        bluetoothAdapter = bluetoothManager.getAdapter();
+        String bluetoothAdapterFormat = String.format("bluetoothAdapter == null: %b", bluetoothAdapter == null);
+        Log.d(MainActivity.class.getSimpleName(), bluetoothAdapterFormat);
 
         if (bluetoothAdapter == null) {
             Toast.makeText(context, "Bluetooth Not Supported", Toast.LENGTH_SHORT).show();
@@ -161,16 +169,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPermission() {
+        /*
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
         } else {
-            /*
-                Permission was already granted
-                Go ahead and search for available devices
-             */
+            //  Permission was already granted
+            //  Go ahead and search for available devices
+
             Intent intent = new Intent(context, DeviceListActivity.class);
             startActivity(intent);
         }
+        */
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //permissionRequester.launch(arrayOf(BLUETOOTH_CONNECT, BLUETOOTH_SCAN))
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.ACCESS_FINE_LOCATION}, BLUETOOTH_SCAN_PERMISSION_REQUEST);
+        } else {
+            // connect to device
+            Intent intent = new Intent(context, DeviceListActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     @Override
